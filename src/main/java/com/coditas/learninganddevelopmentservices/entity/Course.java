@@ -18,9 +18,9 @@ public class Course {
 
     private String title;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.PERSIST)
     private List<Question> questions;
 
-    @OneToMany(mappedBy = "course")
-    private Lecture lecture;
+    @OneToMany(mappedBy = "course", cascade = CascadeType.PERSIST)
+    private List<Lecture> lectures;
 }

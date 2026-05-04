@@ -22,6 +22,10 @@ public class LectureProgress {
     @JoinColumn(name = "lecture_id")
     private Lecture lecture;
 
+    @OneToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
+
     @Column(name = "is_completed")
     private boolean isCompleted;
 }

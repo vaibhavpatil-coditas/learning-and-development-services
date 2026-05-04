@@ -6,7 +6,7 @@ spring:
     password: "coditas@"
   jpa:
     properties.hibernate.default_schema: "dev"
-    hibernate.ddl_auto: update
+    hibernate.ddl_auto: create
 
 server:
   servlet:
