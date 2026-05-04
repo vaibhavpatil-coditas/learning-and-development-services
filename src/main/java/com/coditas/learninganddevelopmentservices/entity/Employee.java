@@ -22,7 +22,7 @@ public class Employee {
 
     private int totalEnrollments;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     private User user;
 }

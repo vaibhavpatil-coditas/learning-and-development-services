@@ -1,0 +1,22 @@
+package com.coditas.learninganddevelopmentservices.dto;
+
+import com.coditas.learninganddevelopmentservices.enums.Role;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter @Setter
+@NoArgsConstructor
+public class UserRequestDto {
+    @Email
+    private String email;
+
+    @NotBlank
+    private String password;
+
+    @NotNull
+    private Role role;
+}
