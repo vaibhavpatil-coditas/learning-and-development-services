@@ -1,7 +1,7 @@
 package com.coditas.learninganddevelopmentservices.mapper;
 
-import com.coditas.learninganddevelopmentservices.dto.EmployeeRequestDto;
-import com.coditas.learninganddevelopmentservices.dto.EmployeeResponseDto;
+import com.coditas.learninganddevelopmentservices.dto.request.EmployeeRequestDto;
+import com.coditas.learninganddevelopmentservices.dto.response.EmployeeResponseDto;
 import com.coditas.learninganddevelopmentservices.entity.Employee;
 import org.mapstruct.Mapper;
 

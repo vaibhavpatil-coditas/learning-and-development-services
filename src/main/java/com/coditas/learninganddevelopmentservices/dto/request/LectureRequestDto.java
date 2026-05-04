@@ -1,4 +1,4 @@
-package com.coditas.learninganddevelopmentservices.dto;
+package com.coditas.learninganddevelopmentservices.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

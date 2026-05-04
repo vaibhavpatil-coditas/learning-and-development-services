@@ -1,7 +1,7 @@
 package com.coditas.learninganddevelopmentservices.controller;
 
-import com.coditas.learninganddevelopmentservices.dto.CourseRequestDto;
-import com.coditas.learninganddevelopmentservices.dto.CourseResponseDto;
+import com.coditas.learninganddevelopmentservices.dto.request.CourseRequestDto;
+import com.coditas.learninganddevelopmentservices.dto.response.CourseResponseDto;
 import com.coditas.learninganddevelopmentservices.service.CourseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

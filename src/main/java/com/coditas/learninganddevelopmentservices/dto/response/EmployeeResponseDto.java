@@ -1,4 +1,4 @@
-package com.coditas.learninganddevelopmentservices.dto;
+package com.coditas.learninganddevelopmentservices.dto.response;
 
 import com.coditas.learninganddevelopmentservices.enums.EmployeeStatus;
 import lombok.Getter;

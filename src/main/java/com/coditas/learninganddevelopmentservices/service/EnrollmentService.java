@@ -1,7 +1,7 @@
 package com.coditas.learninganddevelopmentservices.service;
 
-import com.coditas.learninganddevelopmentservices.dto.EnrollmentRequestDto;
-import com.coditas.learninganddevelopmentservices.dto.EnrollmentResponseDto;
+import com.coditas.learninganddevelopmentservices.dto.request.EnrollmentRequestDto;
+import com.coditas.learninganddevelopmentservices.dto.response.EnrollmentResponseDto;
 import jakarta.validation.Valid;
 
 import java.util.List;

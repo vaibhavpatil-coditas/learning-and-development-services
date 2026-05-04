@@ -1,13 +1,14 @@
 package com.coditas.learninganddevelopmentservices.service.impl;
 
-import com.coditas.learninganddevelopmentservices.dto.CourseRequestDto;
-import com.coditas.learninganddevelopmentservices.dto.CourseResponseDto;
+import com.coditas.learninganddevelopmentservices.dto.request.CourseRequestDto;
+import com.coditas.learninganddevelopmentservices.dto.response.CourseResponseDto;
 import com.coditas.learninganddevelopmentservices.entity.Course;
 import com.coditas.learninganddevelopmentservices.mapper.CourseMapper;
 import com.coditas.learninganddevelopmentservices.repository.CourseRepository;
 import com.coditas.learninganddevelopmentservices.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public CourseResponseDto create(CourseRequestDto courseRequestDto) {
         Course course = courseMapper.toCourse(courseRequestDto);
         course.getLectures().forEach(lecture -> lecture.setCourse(course));

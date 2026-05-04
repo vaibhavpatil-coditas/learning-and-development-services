@@ -1,4 +1,4 @@
-package com.coditas.learninganddevelopmentservices.dto;
+package com.coditas.learninganddevelopmentservices.dto.request;
 
 import com.coditas.learninganddevelopmentservices.enums.Role;
 import jakarta.validation.constraints.Email;

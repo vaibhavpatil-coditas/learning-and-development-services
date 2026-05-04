@@ -1,7 +1,7 @@
 package com.coditas.learninganddevelopmentservices.mapper;
 
-import com.coditas.learninganddevelopmentservices.dto.QuestionRequestDto;
-import com.coditas.learninganddevelopmentservices.dto.QuestionResponseDto;
+import com.coditas.learninganddevelopmentservices.dto.request.QuestionRequestDto;
+import com.coditas.learninganddevelopmentservices.dto.response.QuestionResponseDto;
 import com.coditas.learninganddevelopmentservices.entity.Question;
 import org.mapstruct.Mapper;
 
