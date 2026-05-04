@@ -12,4 +12,6 @@ public interface EmployeeService {
     EmployeeResponseDto create(@Valid EmployeeRequestDto employeeRequestDto);
 
     List<EmployeeResponseDto> getBenchedAndEnrolled();
+
+    List<EmployeeResponseDto> getBenchedAndNotEnrolled();
 }

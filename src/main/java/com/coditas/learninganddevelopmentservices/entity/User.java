@@ -1,6 +1,6 @@
 package com.coditas.learninganddevelopmentservices.entity;
 
-import com.coditas.learninganddevelopmentservices.enums.Role;
+import com.coditas.learninganddevelopmentservices.security.roles.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

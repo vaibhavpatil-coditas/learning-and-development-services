@@ -36,7 +36,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<EmployeeResponseDto> getBenchedAndEnrolled() {
-        List<Employee> employees = employeeRepository.findByEmployeeStatus(EmployeeStatus.BENCHED);
+        List<Employee> employees = employeeRepository.findByEmployeeStatusAndTotalEnrollmentsGreaterThan(EmployeeStatus.BENCHED, 0L);
+        return employeeMapper.toEmployeeResponseDtoList(employees);
+    }
+
+    @Override
+    public List<EmployeeResponseDto> getBenchedAndNotEnrolled() {
+        List<Employee> employees = employeeRepository.findByEmployeeStatusAndTotalEnrollments(EmployeeStatus.BENCHED, 0L);
         return employeeMapper.toEmployeeResponseDtoList(employees);
     }
 }

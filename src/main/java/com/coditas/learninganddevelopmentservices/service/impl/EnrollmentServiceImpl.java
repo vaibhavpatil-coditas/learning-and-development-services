@@ -35,13 +35,18 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     @Transactional
     public EnrollmentResponseDto create(EnrollmentRequestDto enrollmentRequestDto) {
         Enrollment enrollment = enrollmentMapper.toEnrollment(enrollmentRequestDto);
+
         Course course = courseRepository.findById(enrollmentRequestDto.getCourseId()).orElseThrow(()->
                 new RuntimeException("Course Id not found"));
         Employee employee = employeeRepository.findById(enrollmentRequestDto.getEmployeeId()).orElseThrow(()->
                 new RuntimeException("Employee Id not found"));
+
         enrollment.setCourse(course);
         enrollment.setEmployee(employee);
+
         Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
+        employee.setTotalEnrollments(employee.getTotalEnrollments()+1);
+        employeeRepository.save(employee);
         return enrollmentMapper.toEnrollmentResponseDto(savedEnrollment);
     }
 }

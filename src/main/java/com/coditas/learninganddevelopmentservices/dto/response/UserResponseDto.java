@@ -1,6 +1,6 @@
 package com.coditas.learninganddevelopmentservices.dto.response;
 
-import com.coditas.learninganddevelopmentservices.enums.Role;
+import com.coditas.learninganddevelopmentservices.security.roles.Role;
 import lombok.Getter;
 import lombok.Setter;
 
