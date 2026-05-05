@@ -1,13 +1,11 @@
 package com.coditas.learninganddevelopmentservices.controller;
 
+import com.coditas.learninganddevelopmentservices.dto.LectureProgressResponseDto;
 import com.coditas.learninganddevelopmentservices.dto.response.LectureResponseDto;
 import com.coditas.learninganddevelopmentservices.service.LectureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,6 +19,15 @@ public class LectureController {
     @GetMapping
     public ResponseEntity<List<LectureResponseDto>> getAll(@PathVariable Long courseId){
         List<LectureResponseDto> response = lectureService.getAll(courseId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{lectureId}")
+    public ResponseEntity<?> getById(@RequestParam Boolean isCompleted, @PathVariable Long courseId, @PathVariable Long lectureId){
+        if(isCompleted!=null && isCompleted){
+            LectureProgressResponseDto lectureProgressResponseDto = lectureService.markAsCompleted(courseId, lectureId);
+        }
+        LectureResponseDto response = lectureService.getById(courseId, lectureId);
         return ResponseEntity.ok(response);
     }
 }
