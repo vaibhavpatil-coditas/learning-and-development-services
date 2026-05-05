@@ -10,4 +10,6 @@ public interface CourseService {
     List<CourseResponseDto> getAll();
 
     CourseResponseDto create(@Valid CourseRequestDto courseRequestDto);
+
+    CourseResponseDto getById(Long courseId);
 }

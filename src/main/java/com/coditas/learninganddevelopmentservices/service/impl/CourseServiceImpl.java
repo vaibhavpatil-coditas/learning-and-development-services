@@ -11,6 +11,8 @@ import com.coditas.learninganddevelopmentservices.repository.EnrollmentRepositor
 import com.coditas.learninganddevelopmentservices.security.jwt.JwtUtils;
 import com.coditas.learninganddevelopmentservices.service.CourseService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
@@ -26,18 +29,20 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final CourseMapper courseMapper;
-    private final JwtUtils jwtUtils;
 
     @Override
     public List<CourseResponseDto> getAll() {
         List<Course> courses = null;
-        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(user!=null && user.getAuthorities().stream().anyMatch(role->role.getAuthority().equals("ROLE_ADMIN"))){
-            courses = courseRepository.findAll();
-        }else{
-            Employee employee = employeeRepository.findByUser(user).orElseThrow(()->
-                    new RuntimeException("Employee not found"));
-            courses = courseRepository.findCoursesByEmployeeId(employee.getId());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication!=null && authentication.isAuthenticated()) {
+            UserDetails user = (UserDetails) authentication.getPrincipal();
+            if (user != null && user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"))) {
+                courses = courseRepository.findAll();
+            } else {
+                Employee employee = employeeRepository.findByUser(user).orElseThrow(() ->
+                        new RuntimeException("Employee not found"));
+                courses = courseRepository.findCoursesByEmployeeId(employee.getId());
+            }
         }
         return courseMapper.toCourseResponseDtoList(courses);
     }
@@ -50,5 +55,31 @@ public class CourseServiceImpl implements CourseService {
         course.getQuestions().forEach(question -> question.setCourse(course));
         Course savedCourse = courseRepository.save(course);
         return courseMapper.toCourseResponseDto(savedCourse);
+    }
+
+    @Override
+    public CourseResponseDto getById(Long courseId) {
+        Course course = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication!=null && authentication.isAuthenticated()) {
+            UserDetails user = (UserDetails) authentication.getPrincipal();
+            assert user != null;
+            boolean isAdmin = user.getAuthorities().stream().anyMatch(role -> {
+                String authority = role.getAuthority();
+                assert authority != null;
+                return authority.equals("ROLE_ADMIN");
+            });
+            if (isAdmin) {
+                course = courseRepository.findById(courseId).orElseThrow(() ->
+                        new RuntimeException("Course not found"));
+            } else {
+                Employee employee = employeeRepository.findByUser(user).orElseThrow(() ->
+                        new RuntimeException("Employee not found"));
+                course = courseRepository.findById(courseId).orElseThrow(() ->
+                        new RuntimeException("Course not found"));
+                if (!enrollmentRepository.existsByEmployeeAndCourse(employee, course)) course = null;
+            }
+        }
+        return courseMapper.toCourseResponseDto(course);
     }
 }
