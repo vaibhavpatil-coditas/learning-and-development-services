@@ -1,6 +1,7 @@
 package com.coditas.learninganddevelopmentservices.config;
 
 import com.coditas.learninganddevelopmentservices.security.jwt.JwtFilter;
+import com.coditas.learninganddevelopmentservices.security.roles.Role;
 import com.coditas.learninganddevelopmentservices.security.user.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +31,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth->
                         auth
                                 .requestMatchers(HttpMethod.POST,"/v1/auth/login").permitAll()
-//                                .requestMatchers("/").hasRole(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.POST,"/v1/courses").hasRole(Role.ADMIN.name())
+                                .requestMatchers("/v1/employees").hasRole(Role.ADMIN.name())
+                                .requestMatchers("/v1/enrollments").hasRole(Role.ADMIN.name())
                                 .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

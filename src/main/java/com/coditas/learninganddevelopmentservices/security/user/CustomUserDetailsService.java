@@ -1,7 +1,6 @@
 package com.coditas.learninganddevelopmentservices.security.user;
 
 import com.coditas.learninganddevelopmentservices.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,7 +1,6 @@
 package com.coditas.learninganddevelopmentservices.repository;
 
 import com.coditas.learninganddevelopmentservices.entity.User;
-import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
