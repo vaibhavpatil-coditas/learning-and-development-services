@@ -11,3 +11,7 @@ spring:
 server:
   servlet:
     context-path: "/api"
+
+Jwt:
+  SECRET: "Coditas@12093!18203@91823#09128$30298%30123^76543&12145*12245"
+  EXPIRATION: 86400000
