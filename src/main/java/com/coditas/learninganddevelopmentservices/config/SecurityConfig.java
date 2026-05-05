@@ -1,11 +1,11 @@
 package com.coditas.learninganddevelopmentservices.config;
 
 import com.coditas.learninganddevelopmentservices.security.jwt.JwtFilter;
-import com.coditas.learninganddevelopmentservices.security.roles.Role;
 import com.coditas.learninganddevelopmentservices.security.user.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth->
                         auth
-                                .requestMatchers("/api/v1/auth/login").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/v1/auth/login").permitAll()
 //                                .requestMatchers("/").hasRole(Role.ADMIN.name())
                                 .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

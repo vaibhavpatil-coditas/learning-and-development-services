@@ -20,7 +20,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtResponse login(LoginRequestDto loginRequestDto) {
-        JwtResponse jwtResponse = null;
+        JwtResponse jwtResponse = new JwtResponse();
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword()));
         if(authentication.isAuthenticated()){

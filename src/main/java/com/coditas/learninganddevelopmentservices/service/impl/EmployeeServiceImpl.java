@@ -8,6 +8,7 @@ import com.coditas.learninganddevelopmentservices.mapper.EmployeeMapper;
 import com.coditas.learninganddevelopmentservices.repository.EmployeeRepository;
 import com.coditas.learninganddevelopmentservices.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.List;
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper employeeMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<EmployeeResponseDto> getAll() {
@@ -29,6 +31,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     public EmployeeResponseDto create(EmployeeRequestDto employeeRequestDto) {
         employeeRequestDto.setTotalEnrollments(0);
+        employeeRequestDto.getUser().setPassword(passwordEncoder.encode(employeeRequestDto.getUser().getPassword()));
         Employee employee = employeeMapper.toEmployee(employeeRequestDto);
         Employee savedEmployee = employeeRepository.save(employee);
         return employeeMapper.toEmployeeResponseDto(savedEmployee);
