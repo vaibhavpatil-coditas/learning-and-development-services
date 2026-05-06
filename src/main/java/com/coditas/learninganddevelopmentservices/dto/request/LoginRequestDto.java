@@ -1,4 +1,4 @@
-package com.coditas.learninganddevelopmentservices.dto;
+package com.coditas.learninganddevelopmentservices.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

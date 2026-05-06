@@ -1,6 +1,6 @@
 package com.coditas.learninganddevelopmentservices.service.impl;
 
-import com.coditas.learninganddevelopmentservices.dto.LoginRequestDto;
+import com.coditas.learninganddevelopmentservices.dto.request.LoginRequestDto;
 import com.coditas.learninganddevelopmentservices.dto.response.JwtResponse;
 import com.coditas.learninganddevelopmentservices.security.jwt.JwtUtils;
 import com.coditas.learninganddevelopmentservices.service.AuthService;

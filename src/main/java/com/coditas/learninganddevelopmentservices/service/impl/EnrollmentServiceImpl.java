@@ -35,6 +35,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     @Transactional
     public EnrollmentResponseDto create(EnrollmentRequestDto enrollmentRequestDto) {
         Enrollment enrollment = enrollmentMapper.toEnrollment(enrollmentRequestDto);
+        enrollment.setCompletedLectureCount(0);
 
         Course course = courseRepository.findById(enrollmentRequestDto.getCourseId()).orElseThrow(()->
                 new RuntimeException("Course Id not found"));

@@ -1,6 +1,6 @@
 package com.coditas.learninganddevelopmentservices.service.impl;
 
-import com.coditas.learninganddevelopmentservices.dto.LectureProgressResponseDto;
+import com.coditas.learninganddevelopmentservices.dto.response.LectureProgressResponseDto;
 import com.coditas.learninganddevelopmentservices.dto.response.LectureResponseDto;
 import com.coditas.learninganddevelopmentservices.entity.*;
 import com.coditas.learninganddevelopmentservices.mapper.LectureMapper;
@@ -8,7 +8,7 @@ import com.coditas.learninganddevelopmentservices.mapper.LectureProgressMapper;
 import com.coditas.learninganddevelopmentservices.repository.*;
 import com.coditas.learninganddevelopmentservices.service.LectureService;
 import lombok.RequiredArgsConstructor;
-import org.antlr.v4.runtime.misc.LogManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class LectureServiceImpl implements LectureService {
 
@@ -72,7 +72,7 @@ public class LectureServiceImpl implements LectureService {
     @Override
     @Transactional
     public LectureProgressResponseDto markAsCompleted(Long courseId, Long lectureId) {
-        LectureProgress lectureProgressResponse = null;
+        LectureProgress savedLectureProgress = null;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication!=null && authentication.isAuthenticated()){
             UserDetails user = (UserDetails) authentication.getPrincipal();
@@ -86,10 +86,10 @@ public class LectureServiceImpl implements LectureService {
                     .employee(employee)
                     .lecture(lecture)
                     .course(course)
-                    .isCompleted(true)
                     .build();
-            lectureProgressResponse = lectureProgressRepository.save(lectureProgress);
-            if(isCourseCompleted(employee, course)){
+            savedLectureProgress = lectureProgressRepository.save(lectureProgress);
+            LectureProgressResponseDto lectureProgressResponseDto = lectureProgressMapper.toLectureProgressResponseDto(savedLectureProgress);
+            if(checkCourseCompleted(employee, course)){
                 Certificate certificate = Certificate.builder()
                         .course(course)
                         .employee(employee)
@@ -98,10 +98,13 @@ public class LectureServiceImpl implements LectureService {
                 certificateRepository.save(certificate);
             }
         }
-        return lectureProgressMapper.toLectureProgressResponseDto(lectureProgressResponse);
+        return lectureProgressMapper.toLectureProgressResponseDto(savedLectureProgress);
     }
 
-    private boolean isCourseCompleted(Employee employee, Course course) {
-        return false;
+    private boolean checkCourseCompleted(Employee employee, Course course) {
+        long numberOfLectures = course.getNumberOfLectures();
+        long completedLectures = lectureProgressRepository.countByEmployeeAndCourse(employee, course);
+        log.info("{}",completedLectures);
+        return numberOfLectures==completedLectures;
     }
 }

@@ -1,6 +1,6 @@
 package com.coditas.learninganddevelopmentservices.controller;
 
-import com.coditas.learninganddevelopmentservices.dto.LectureProgressResponseDto;
+import com.coditas.learninganddevelopmentservices.dto.response.LectureProgressResponseDto;
 import com.coditas.learninganddevelopmentservices.dto.response.LectureResponseDto;
 import com.coditas.learninganddevelopmentservices.service.LectureService;
 import lombok.RequiredArgsConstructor;

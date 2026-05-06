@@ -25,7 +25,4 @@ public class LectureProgress {
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
-
-    @Column(name = "is_completed")
-    private boolean isCompleted;
 }
