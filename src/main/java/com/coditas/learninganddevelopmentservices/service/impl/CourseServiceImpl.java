@@ -11,7 +11,6 @@ import com.coditas.learninganddevelopmentservices.mapper.CourseMapper;
 import com.coditas.learninganddevelopmentservices.repository.CourseRepository;
 import com.coditas.learninganddevelopmentservices.repository.EmployeeRepository;
 import com.coditas.learninganddevelopmentservices.repository.EnrollmentRepository;
-import com.coditas.learninganddevelopmentservices.security.jwt.JwtUtils;
 import com.coditas.learninganddevelopmentservices.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

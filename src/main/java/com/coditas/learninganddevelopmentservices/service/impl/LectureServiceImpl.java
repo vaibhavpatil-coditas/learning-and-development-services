@@ -92,7 +92,6 @@ public class LectureServiceImpl implements LectureService {
                     .course(course)
                     .build();
             savedLectureProgress = lectureProgressRepository.save(lectureProgress);
-            LectureProgressResponseDto lectureProgressResponseDto = lectureProgressMapper.toLectureProgressResponseDto(savedLectureProgress);
             if(checkCourseCompleted(employee, course)){
                 Certificate certificate = Certificate.builder()
                         .course(course)
