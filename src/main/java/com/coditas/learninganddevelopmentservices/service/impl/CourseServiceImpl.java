@@ -4,6 +4,9 @@ import com.coditas.learninganddevelopmentservices.dto.request.CourseRequestDto;
 import com.coditas.learninganddevelopmentservices.dto.response.CourseResponseDto;
 import com.coditas.learninganddevelopmentservices.entity.Course;
 import com.coditas.learninganddevelopmentservices.entity.Employee;
+import com.coditas.learninganddevelopmentservices.exception.CourseNotFoundException;
+import com.coditas.learninganddevelopmentservices.exception.EmployeeNotFoundException;
+import com.coditas.learninganddevelopmentservices.exception.ExceptionMessages;
 import com.coditas.learninganddevelopmentservices.mapper.CourseMapper;
 import com.coditas.learninganddevelopmentservices.repository.CourseRepository;
 import com.coditas.learninganddevelopmentservices.repository.EmployeeRepository;
@@ -40,7 +43,7 @@ public class CourseServiceImpl implements CourseService {
                 courses = courseRepository.findAll();
             } else {
                 Employee employee = employeeRepository.findByUser(user).orElseThrow(() ->
-                        new RuntimeException("Employee not found"));
+                        new EmployeeNotFoundException(ExceptionMessages.EMPLOYEE_NOT_FOUND));
                 courses = courseRepository.findCoursesByEmployeeId(employee.getId());
             }
         }
@@ -74,12 +77,12 @@ public class CourseServiceImpl implements CourseService {
             });
             if (isAdmin) {
                 course = courseRepository.findById(courseId).orElseThrow(() ->
-                        new RuntimeException("Course not found"));
+                        new CourseNotFoundException(ExceptionMessages.COURSE_NOT_FOUND));
             } else {
                 Employee employee = employeeRepository.findByUser(user).orElseThrow(() ->
-                        new RuntimeException("Employee not found"));
+                        new EmployeeNotFoundException(ExceptionMessages.EMPLOYEE_NOT_FOUND));
                 course = courseRepository.findById(courseId).orElseThrow(() ->
-                        new RuntimeException("Course not found"));
+                        new CourseNotFoundException(ExceptionMessages.COURSE_NOT_FOUND));
                 if (!enrollmentRepository.existsByEmployeeAndCourse(employee, course)) course = null;
             }
         }

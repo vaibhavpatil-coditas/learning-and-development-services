@@ -5,6 +5,9 @@ import com.coditas.learninganddevelopmentservices.dto.response.EnrollmentRespons
 import com.coditas.learninganddevelopmentservices.entity.Course;
 import com.coditas.learninganddevelopmentservices.entity.Employee;
 import com.coditas.learninganddevelopmentservices.entity.Enrollment;
+import com.coditas.learninganddevelopmentservices.exception.CourseNotFoundException;
+import com.coditas.learninganddevelopmentservices.exception.EmployeeNotFoundException;
+import com.coditas.learninganddevelopmentservices.exception.ExceptionMessages;
 import com.coditas.learninganddevelopmentservices.mapper.EnrollmentMapper;
 import com.coditas.learninganddevelopmentservices.repository.CourseRepository;
 import com.coditas.learninganddevelopmentservices.repository.EmployeeRepository;
@@ -38,9 +41,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         enrollment.setCompletedLectureCount(0);
 
         Course course = courseRepository.findById(enrollmentRequestDto.getCourseId()).orElseThrow(()->
-                new RuntimeException("Course Id not found"));
+                new CourseNotFoundException(ExceptionMessages.COURSE_NOT_FOUND));
         Employee employee = employeeRepository.findById(enrollmentRequestDto.getEmployeeId()).orElseThrow(()->
-                new RuntimeException("Employee Id not found"));
+                new EmployeeNotFoundException(ExceptionMessages.EMPLOYEE_NOT_FOUND));
 
         enrollment.setCourse(course);
         enrollment.setEmployee(employee);

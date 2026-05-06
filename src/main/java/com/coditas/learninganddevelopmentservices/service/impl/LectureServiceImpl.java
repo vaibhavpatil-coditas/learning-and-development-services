@@ -3,6 +3,10 @@ package com.coditas.learninganddevelopmentservices.service.impl;
 import com.coditas.learninganddevelopmentservices.dto.response.LectureProgressResponseDto;
 import com.coditas.learninganddevelopmentservices.dto.response.LectureResponseDto;
 import com.coditas.learninganddevelopmentservices.entity.*;
+import com.coditas.learninganddevelopmentservices.exception.CourseNotFoundException;
+import com.coditas.learninganddevelopmentservices.exception.EmployeeNotFoundException;
+import com.coditas.learninganddevelopmentservices.exception.ExceptionMessages;
+import com.coditas.learninganddevelopmentservices.exception.LectureNotFound;
 import com.coditas.learninganddevelopmentservices.mapper.LectureMapper;
 import com.coditas.learninganddevelopmentservices.mapper.LectureProgressMapper;
 import com.coditas.learninganddevelopmentservices.repository.*;
@@ -44,7 +48,7 @@ public class LectureServiceImpl implements LectureService {
             });
             if (!isAdmin){
                 Employee employee = employeeRepository.findByUser(user).orElseThrow(() ->
-                        new RuntimeException("Employee not found"));
+                        new EmployeeNotFoundException(ExceptionMessages.EMPLOYEE_NOT_FOUND));
                 return enrollmentRepository.existsByEmployeeAndCourse(employee, course);
             }
         }
@@ -54,7 +58,7 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public List<LectureResponseDto> getAll(Long courseId) {
         Course course = courseRepository.findById(courseId).orElseThrow(() ->
-                new RuntimeException("Course not found"));
+                new CourseNotFoundException(ExceptionMessages.COURSE_NOT_FOUND));
         List<Lecture> lectures = lectureRepository.findByCourse(course);
         List<LectureResponseDto> lectureResponseDtoList = lectureMapper.toLectureResponseDtoList(lectures);
         if(!isAdminOrEnrolledEmployee(course))
@@ -65,7 +69,7 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public LectureResponseDto getById(Long courseId, Long lectureId) {
         Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(() ->
-                new RuntimeException("Lecture not found"));
+                new LectureNotFound(ExceptionMessages.LECTURE_NOT_FOUND));
         return lectureMapper.toLectureResponseDto(lecture);
     }
 
@@ -77,11 +81,11 @@ public class LectureServiceImpl implements LectureService {
         if(authentication!=null && authentication.isAuthenticated()){
             UserDetails user = (UserDetails) authentication.getPrincipal();
             Employee employee = employeeRepository.findByUser(user).orElseThrow(() ->
-                    new RuntimeException("Employee not found"));
+                    new EmployeeNotFoundException(ExceptionMessages.EMPLOYEE_NOT_FOUND));
             Course course = courseRepository.findById(courseId).orElseThrow(()->
-                    new RuntimeException("Course not found"));
+                    new CourseNotFoundException(ExceptionMessages.COURSE_NOT_FOUND));
             Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(() ->
-                    new RuntimeException("Lecture not found"));
+                    new LectureNotFound(ExceptionMessages.LECTURE_NOT_FOUND));
             LectureProgress lectureProgress = LectureProgress.builder()
                     .employee(employee)
                     .lecture(lecture)
