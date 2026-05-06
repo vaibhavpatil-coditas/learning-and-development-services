@@ -20,12 +20,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtResponse login(LoginRequestDto loginRequestDto) {
-        JwtResponse jwtResponse = new JwtResponse();
+        JwtResponse jwtResponse = null;
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword()));
         if(authentication.isAuthenticated()){
             UserDetails user = (UserDetails) authentication.getPrincipal();
-            if(user!=null) jwtResponse.setToken(jwtUtils.generateToken(user));
+            if(user!=null) jwtResponse = JwtResponse.builder().token(jwtUtils.generateToken(user)).build();
         }
         return jwtResponse;
     }

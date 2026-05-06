@@ -80,12 +80,16 @@ public class LectureServiceImpl implements LectureService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication!=null && authentication.isAuthenticated()){
             UserDetails user = (UserDetails) authentication.getPrincipal();
+
             Employee employee = employeeRepository.findByUser(user).orElseThrow(() ->
                     new EmployeeNotFoundException(ExceptionMessages.EMPLOYEE_NOT_FOUND));
+
             Course course = courseRepository.findById(courseId).orElseThrow(()->
                     new CourseNotFoundException(ExceptionMessages.COURSE_NOT_FOUND));
+
             Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(() ->
                     new LectureNotFound(ExceptionMessages.LECTURE_NOT_FOUND));
+
             LectureProgress lectureProgress = LectureProgress.builder()
                     .employee(employee)
                     .lecture(lecture)

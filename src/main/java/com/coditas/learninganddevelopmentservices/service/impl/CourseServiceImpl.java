@@ -13,7 +13,6 @@ import com.coditas.learninganddevelopmentservices.repository.EmployeeRepository;
 import com.coditas.learninganddevelopmentservices.repository.EnrollmentRepository;
 import com.coditas.learninganddevelopmentservices.service.CourseService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
@@ -53,12 +51,10 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public CourseResponseDto create(CourseRequestDto courseRequestDto) {
         Course course = courseMapper.toCourse(courseRequestDto);
-        log.info("{}", course.getLectures().size());
         course.setNumberOfLectures((long) courseRequestDto.getLectures().size());
         course.getLectures().forEach(lecture -> lecture.setCourse(course));
         course.getQuestions().forEach(question -> question.setCourse(course));
         Course savedCourse = courseRepository.save(course);
-        log.info("{}", savedCourse.getLectures().size());
         return courseMapper.toCourseResponseDto(savedCourse);
     }
 

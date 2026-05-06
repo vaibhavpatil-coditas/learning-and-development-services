@@ -1,0 +1,294 @@
+Index: src/main/java/com/coditas/learninganddevelopmentservices/dto/response/ErrorResponse.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/coditas/learninganddevelopmentservices/dto/response/ErrorResponse.java b/src/main/java/com/coditas/learninganddevelopmentservices/dto/response/ErrorResponse.java
+--- a/src/main/java/com/coditas/learninganddevelopmentservices/dto/response/ErrorResponse.java	(revision 57f214be1bae3a1fe0898129d3953a335e023e77)
++++ b/src/main/java/com/coditas/learninganddevelopmentservices/dto/response/ErrorResponse.java	(revision ed7f2250873b67f1b6c944f339f2d1e4651a139d)
+@@ -4,8 +4,12 @@
+ import lombok.Getter;
+ import lombok.Setter;
+ 
++import java.time.LocalDateTime;
++
+ @Getter @Setter
+ @Builder
+ public class ErrorResponse {
+     private String message;
++    private LocalDateTime timestamp;
++    private Integer status;
+ }
+Index: src/main/java/com/coditas/learninganddevelopmentservices/exception/CourseNotFoundException.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/coditas/learninganddevelopmentservices/exception/CourseNotFoundException.java b/src/main/java/com/coditas/learninganddevelopmentservices/exception/CourseNotFoundException.java
+new file mode 100644
+--- /dev/null	(revision ed7f2250873b67f1b6c944f339f2d1e4651a139d)
++++ b/src/main/java/com/coditas/learninganddevelopmentservices/exception/CourseNotFoundException.java	(revision ed7f2250873b67f1b6c944f339f2d1e4651a139d)
+@@ -0,0 +1,7 @@
++package com.coditas.learninganddevelopmentservices.exception;
++
++public class CourseNotFoundException extends RuntimeException {
++    public CourseNotFoundException(String message) {
++        super(message);
++    }
++}
+Index: src/main/java/com/coditas/learninganddevelopmentservices/exception/EmployeeNotFoundException.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/coditas/learninganddevelopmentservices/exception/EmployeeNotFoundException.java b/src/main/java/com/coditas/learninganddevelopmentservices/exception/EmployeeNotFoundException.java
+new file mode 100644
+--- /dev/null	(revision ed7f2250873b67f1b6c944f339f2d1e4651a139d)
++++ b/src/main/java/com/coditas/learninganddevelopmentservices/exception/EmployeeNotFoundException.java	(revision ed7f2250873b67f1b6c944f339f2d1e4651a139d)
+@@ -0,0 +1,7 @@
++package com.coditas.learninganddevelopmentservices.exception;
++
++public class EmployeeNotFoundException extends RuntimeException {
++    public EmployeeNotFoundException(String message) {
++        super(message);
++    }
++}
+Index: src/main/java/com/coditas/learninganddevelopmentservices/exception/ExceptionMessages.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/coditas/learninganddevelopmentservices/exception/ExceptionMessages.java b/src/main/java/com/coditas/learninganddevelopmentservices/exception/ExceptionMessages.java
+new file mode 100644
+--- /dev/null	(revision ed7f2250873b67f1b6c944f339f2d1e4651a139d)
++++ b/src/main/java/com/coditas/learninganddevelopmentservices/exception/ExceptionMessages.java	(revision ed7f2250873b67f1b6c944f339f2d1e4651a139d)
+@@ -0,0 +1,10 @@
++package com.coditas.learninganddevelopmentservices.exception;
++
++public final class ExceptionMessages {
++
++    private ExceptionMessages(){}
++
++    public static final String EMPLOYEE_NOT_FOUND = "Employee not found";
++    public static final String COURSE_NOT_FOUND = "Course not found";
++    public static final String LECTURE_NOT_FOUND = "Course Id not found";
++}
+Index: src/main/java/com/coditas/learninganddevelopmentservices/exception/GlobalExceptionHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/coditas/learninganddevelopmentservices/exception/GlobalExceptionHandler.java b/src/main/java/com/coditas/learninganddevelopmentservices/exception/GlobalExceptionHandler.java
+--- a/src/main/java/com/coditas/learninganddevelopmentservices/exception/GlobalExceptionHandler.java	(revision 57f214be1bae3a1fe0898129d3953a335e023e77)
++++ b/src/main/java/com/coditas/learninganddevelopmentservices/exception/GlobalExceptionHandler.java	(revision 9da60f83038cbec937d2f2332202af2bd3b0493b)
+@@ -2,17 +2,42 @@
+ 
+ import com.coditas.learninganddevelopmentservices.dto.response.ErrorResponse;
+ import org.springframework.http.HttpStatus;
+-import org.springframework.http.HttpStatusCode;
+ import org.springframework.http.ResponseEntity;
+ import org.springframework.web.bind.annotation.ExceptionHandler;
+ import org.springframework.web.bind.annotation.RestControllerAdvice;
+ 
++import java.time.LocalDateTime;
++
+ @RestControllerAdvice
+ public class GlobalExceptionHandler {
+ 
+-    @ExceptionHandler(RuntimeException.class)
+-    public ResponseEntity<ErrorResponse> runtimeExceptionHandler(RuntimeException exception){
+-        ErrorResponse errorResponse = ErrorResponse.builder().message(exception.getMessage()).build();
+-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
++    @ExceptionHandler(EmployeeNotFoundException.class)
++    public ResponseEntity<ErrorResponse> employeeNotFoundExceptionHandler(EmployeeNotFoundException exception){
++        ErrorResponse errorResponse = ErrorResponse.builder()
++                .status(HttpStatus.NOT_FOUND.value())
++                .message(exception.getMessage())
++                .timestamp(LocalDateTime.now())
++                .build();
++        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
++    }
++
++    @ExceptionHandler(LectureNotFound.class)
++    public ResponseEntity<ErrorResponse> lectureNotFoundExceptionHandler(LectureNotFound exception){
++        ErrorResponse errorResponse = ErrorResponse.builder()
++                .status(HttpStatus.NOT_FOUND.value())
++                .message(exception.getMessage())
++                .timestamp(LocalDateTime.now())
++                .build();
++        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
++    }
++
++    @ExceptionHandler(CourseNotFoundException.class)
++    public ResponseEntity<ErrorResponse> employeeNotFoundExceptionHandler(CourseNotFoundException exception){
++        ErrorResponse errorResponse = ErrorResponse.builder()
++                .status(HttpStatus.NOT_FOUND.value())
++                .message(exception.getMessage())
++                .timestamp(LocalDateTime.now())
++                .build();
++        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+     }
+ }
+Index: src/main/java/com/coditas/learninganddevelopmentservices/exception/LectureNotFound.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/coditas/learninganddevelopmentservices/exception/LectureNotFound.java b/src/main/java/com/coditas/learninganddevelopmentservices/exception/LectureNotFound.java
+new file mode 100644
+--- /dev/null	(revision ed7f2250873b67f1b6c944f339f2d1e4651a139d)
++++ b/src/main/java/com/coditas/learninganddevelopmentservices/exception/LectureNotFound.java	(revision ed7f2250873b67f1b6c944f339f2d1e4651a139d)
+@@ -0,0 +1,7 @@
++package com.coditas.learninganddevelopmentservices.exception;
++
++public class LectureNotFound extends RuntimeException {
++    public LectureNotFound(String message) {
++        super(message);
++    }
++}
+Index: src/main/java/com/coditas/learninganddevelopmentservices/service/impl/CourseServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/coditas/learninganddevelopmentservices/service/impl/CourseServiceImpl.java b/src/main/java/com/coditas/learninganddevelopmentservices/service/impl/CourseServiceImpl.java
+--- a/src/main/java/com/coditas/learninganddevelopmentservices/service/impl/CourseServiceImpl.java	(revision 57f214be1bae3a1fe0898129d3953a335e023e77)
++++ b/src/main/java/com/coditas/learninganddevelopmentservices/service/impl/CourseServiceImpl.java	(revision b50aeeb4a97b3682eb24385795aa901155513081)
+@@ -4,11 +4,13 @@
+ import com.coditas.learninganddevelopmentservices.dto.response.CourseResponseDto;
+ import com.coditas.learninganddevelopmentservices.entity.Course;
+ import com.coditas.learninganddevelopmentservices.entity.Employee;
++import com.coditas.learninganddevelopmentservices.exception.CourseNotFoundException;
++import com.coditas.learninganddevelopmentservices.exception.EmployeeNotFoundException;
++import com.coditas.learninganddevelopmentservices.exception.ExceptionMessages;
+ import com.coditas.learninganddevelopmentservices.mapper.CourseMapper;
+ import com.coditas.learninganddevelopmentservices.repository.CourseRepository;
+ import com.coditas.learninganddevelopmentservices.repository.EmployeeRepository;
+ import com.coditas.learninganddevelopmentservices.repository.EnrollmentRepository;
+-import com.coditas.learninganddevelopmentservices.security.jwt.JwtUtils;
+ import com.coditas.learninganddevelopmentservices.service.CourseService;
+ import lombok.RequiredArgsConstructor;
+ import lombok.extern.slf4j.Slf4j;
+@@ -40,7 +42,7 @@
+                 courses = courseRepository.findAll();
+             } else {
+                 Employee employee = employeeRepository.findByUser(user).orElseThrow(() ->
+-                        new RuntimeException("Employee not found"));
++                        new EmployeeNotFoundException(ExceptionMessages.EMPLOYEE_NOT_FOUND));
+                 courses = courseRepository.findCoursesByEmployeeId(employee.getId());
+             }
+         }
+@@ -74,12 +76,12 @@
+             });
+             if (isAdmin) {
+                 course = courseRepository.findById(courseId).orElseThrow(() ->
+-                        new RuntimeException("Course not found"));
++                        new CourseNotFoundException(ExceptionMessages.COURSE_NOT_FOUND));
+             } else {
+                 Employee employee = employeeRepository.findByUser(user).orElseThrow(() ->
+-                        new RuntimeException("Employee not found"));
++                        new EmployeeNotFoundException(ExceptionMessages.EMPLOYEE_NOT_FOUND));
+                 course = courseRepository.findById(courseId).orElseThrow(() ->
+-                        new RuntimeException("Course not found"));
++                        new CourseNotFoundException(ExceptionMessages.COURSE_NOT_FOUND));
+                 if (!enrollmentRepository.existsByEmployeeAndCourse(employee, course)) course = null;
+             }
+         }
+Index: src/main/java/com/coditas/learninganddevelopmentservices/service/impl/EnrollmentServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/coditas/learninganddevelopmentservices/service/impl/EnrollmentServiceImpl.java b/src/main/java/com/coditas/learninganddevelopmentservices/service/impl/EnrollmentServiceImpl.java
+--- a/src/main/java/com/coditas/learninganddevelopmentservices/service/impl/EnrollmentServiceImpl.java	(revision 57f214be1bae3a1fe0898129d3953a335e023e77)
++++ b/src/main/java/com/coditas/learninganddevelopmentservices/service/impl/EnrollmentServiceImpl.java	(revision ed7f2250873b67f1b6c944f339f2d1e4651a139d)
+@@ -5,6 +5,9 @@
+ import com.coditas.learninganddevelopmentservices.entity.Course;
+ import com.coditas.learninganddevelopmentservices.entity.Employee;
+ import com.coditas.learninganddevelopmentservices.entity.Enrollment;
++import com.coditas.learninganddevelopmentservices.exception.CourseNotFoundException;
++import com.coditas.learninganddevelopmentservices.exception.EmployeeNotFoundException;
++import com.coditas.learninganddevelopmentservices.exception.ExceptionMessages;
+ import com.coditas.learninganddevelopmentservices.mapper.EnrollmentMapper;
+ import com.coditas.learninganddevelopmentservices.repository.CourseRepository;
+ import com.coditas.learninganddevelopmentservices.repository.EmployeeRepository;
+@@ -38,9 +41,9 @@
+         enrollment.setCompletedLectureCount(0);
+ 
+         Course course = courseRepository.findById(enrollmentRequestDto.getCourseId()).orElseThrow(()->
+-                new RuntimeException("Course Id not found"));
++                new CourseNotFoundException(ExceptionMessages.COURSE_NOT_FOUND));
+         Employee employee = employeeRepository.findById(enrollmentRequestDto.getEmployeeId()).orElseThrow(()->
+-                new RuntimeException("Employee Id not found"));
++                new EmployeeNotFoundException(ExceptionMessages.EMPLOYEE_NOT_FOUND));
+ 
+         enrollment.setCourse(course);
+         enrollment.setEmployee(employee);
+Index: src/main/java/com/coditas/learninganddevelopmentservices/service/impl/LectureServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/coditas/learninganddevelopmentservices/service/impl/LectureServiceImpl.java b/src/main/java/com/coditas/learninganddevelopmentservices/service/impl/LectureServiceImpl.java
+--- a/src/main/java/com/coditas/learninganddevelopmentservices/service/impl/LectureServiceImpl.java	(revision 57f214be1bae3a1fe0898129d3953a335e023e77)
++++ b/src/main/java/com/coditas/learninganddevelopmentservices/service/impl/LectureServiceImpl.java	(revision b50aeeb4a97b3682eb24385795aa901155513081)
+@@ -3,6 +3,10 @@
+ import com.coditas.learninganddevelopmentservices.dto.response.LectureProgressResponseDto;
+ import com.coditas.learninganddevelopmentservices.dto.response.LectureResponseDto;
+ import com.coditas.learninganddevelopmentservices.entity.*;
++import com.coditas.learninganddevelopmentservices.exception.CourseNotFoundException;
++import com.coditas.learninganddevelopmentservices.exception.EmployeeNotFoundException;
++import com.coditas.learninganddevelopmentservices.exception.ExceptionMessages;
++import com.coditas.learninganddevelopmentservices.exception.LectureNotFound;
+ import com.coditas.learninganddevelopmentservices.mapper.LectureMapper;
+ import com.coditas.learninganddevelopmentservices.mapper.LectureProgressMapper;
+ import com.coditas.learninganddevelopmentservices.repository.*;
+@@ -44,7 +48,7 @@
+             });
+             if (!isAdmin){
+                 Employee employee = employeeRepository.findByUser(user).orElseThrow(() ->
+-                        new RuntimeException("Employee not found"));
++                        new EmployeeNotFoundException(ExceptionMessages.EMPLOYEE_NOT_FOUND));
+                 return enrollmentRepository.existsByEmployeeAndCourse(employee, course);
+             }
+         }
+@@ -54,7 +58,7 @@
+     @Override
+     public List<LectureResponseDto> getAll(Long courseId) {
+         Course course = courseRepository.findById(courseId).orElseThrow(() ->
+-                new RuntimeException("Course not found"));
++                new CourseNotFoundException(ExceptionMessages.COURSE_NOT_FOUND));
+         List<Lecture> lectures = lectureRepository.findByCourse(course);
+         List<LectureResponseDto> lectureResponseDtoList = lectureMapper.toLectureResponseDtoList(lectures);
+         if(!isAdminOrEnrolledEmployee(course))
+@@ -65,7 +69,7 @@
+     @Override
+     public LectureResponseDto getById(Long courseId, Long lectureId) {
+         Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(() ->
+-                new RuntimeException("Lecture not found"));
++                new LectureNotFound(ExceptionMessages.LECTURE_NOT_FOUND));
+         return lectureMapper.toLectureResponseDto(lecture);
+     }
+ 
+@@ -77,18 +81,17 @@
+         if(authentication!=null && authentication.isAuthenticated()){
+             UserDetails user = (UserDetails) authentication.getPrincipal();
+             Employee employee = employeeRepository.findByUser(user).orElseThrow(() ->
+-                    new RuntimeException("Employee not found"));
++                    new EmployeeNotFoundException(ExceptionMessages.EMPLOYEE_NOT_FOUND));
+             Course course = courseRepository.findById(courseId).orElseThrow(()->
+-                    new RuntimeException("Course not found"));
++                    new CourseNotFoundException(ExceptionMessages.COURSE_NOT_FOUND));
+             Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(() ->
+-                    new RuntimeException("Lecture not found"));
++                    new LectureNotFound(ExceptionMessages.LECTURE_NOT_FOUND));
+             LectureProgress lectureProgress = LectureProgress.builder()
+                     .employee(employee)
+                     .lecture(lecture)
+                     .course(course)
+                     .build();
+             savedLectureProgress = lectureProgressRepository.save(lectureProgress);
+-            LectureProgressResponseDto lectureProgressResponseDto = lectureProgressMapper.toLectureProgressResponseDto(savedLectureProgress);
+             if(checkCourseCompleted(employee, course)){
+                 Certificate certificate = Certificate.builder()
+                         .course(course)
