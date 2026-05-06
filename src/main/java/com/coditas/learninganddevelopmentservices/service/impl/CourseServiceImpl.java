@@ -51,6 +51,7 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public CourseResponseDto create(CourseRequestDto courseRequestDto) {
         Course course = courseMapper.toCourse(courseRequestDto);
+        course.setNumberOfLectures((long) courseRequestDto.getLectures().size());
         course.getLectures().forEach(lecture -> lecture.setCourse(course));
         course.getQuestions().forEach(question -> question.setCourse(course));
         Course savedCourse = courseRepository.save(course);

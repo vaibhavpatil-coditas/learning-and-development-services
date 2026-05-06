@@ -10,4 +10,5 @@ public class CourseResponseDto {
     private Long id;
     private String title;
     private List<LectureResponseDto> lectures;
+    private Long numberOfLectures;
 }

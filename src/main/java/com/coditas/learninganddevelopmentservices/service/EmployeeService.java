@@ -9,7 +9,7 @@ import java.util.List;
 public interface EmployeeService {
     List<EmployeeResponseDto> getAll();
 
-    EmployeeResponseDto create(@Valid EmployeeRequestDto employeeRequestDto);
+    EmployeeResponseDto create(EmployeeRequestDto employeeRequestDto);
 
     List<EmployeeResponseDto> getBenchedAndEnrolled();
 

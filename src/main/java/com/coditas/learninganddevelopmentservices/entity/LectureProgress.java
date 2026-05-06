@@ -18,11 +18,11 @@ public class LectureProgress {
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "lecture_id")
     private Lecture lecture;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
 

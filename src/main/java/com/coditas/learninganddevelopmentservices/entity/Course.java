@@ -23,4 +23,7 @@ public class Course {
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.PERSIST)
     private List<Lecture> lectures;
+
+    @Column(name = "number_of_lectures")
+    private Long numberOfLectures;
 }

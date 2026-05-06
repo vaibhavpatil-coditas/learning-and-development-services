@@ -23,11 +23,14 @@ public class LectureController {
     }
 
     @GetMapping("/{lectureId}")
-    public ResponseEntity<?> getById(@RequestParam Boolean isCompleted, @PathVariable Long courseId, @PathVariable Long lectureId){
-        if(isCompleted!=null && isCompleted){
-            LectureProgressResponseDto lectureProgressResponseDto = lectureService.markAsCompleted(courseId, lectureId);
-        }
+    public ResponseEntity<LectureResponseDto> getById(@PathVariable Long courseId, @PathVariable Long lectureId){
         LectureResponseDto response = lectureService.getById(courseId, lectureId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{lectureId}/complete")
+    public ResponseEntity<LectureProgressResponseDto> markComplete(@PathVariable Long courseId, @PathVariable Long lectureId){
+        LectureProgressResponseDto response = lectureService.markAsCompleted(courseId, lectureId);
         return ResponseEntity.ok(response);
     }
 }

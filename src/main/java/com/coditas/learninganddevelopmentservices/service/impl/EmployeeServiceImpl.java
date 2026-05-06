@@ -6,6 +6,7 @@ import com.coditas.learninganddevelopmentservices.entity.Employee;
 import com.coditas.learninganddevelopmentservices.enums.EmployeeStatus;
 import com.coditas.learninganddevelopmentservices.mapper.EmployeeMapper;
 import com.coditas.learninganddevelopmentservices.repository.EmployeeRepository;
+import com.coditas.learninganddevelopmentservices.security.roles.Role;
 import com.coditas.learninganddevelopmentservices.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +31,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public EmployeeResponseDto create(EmployeeRequestDto employeeRequestDto) {
+        employeeRequestDto.getUser().setRole(Role.EMPLOYEE);
         employeeRequestDto.setTotalEnrollments(0);
         employeeRequestDto.getUser().setPassword(passwordEncoder.encode(employeeRequestDto.getUser().getPassword()));
         Employee employee = employeeMapper.toEmployee(employeeRequestDto);

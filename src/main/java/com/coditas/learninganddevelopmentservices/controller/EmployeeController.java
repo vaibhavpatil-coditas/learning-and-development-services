@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
-@Slf4j
 @RestController
 @RequestMapping("/v1/employees")
 @RequiredArgsConstructor
@@ -41,10 +40,4 @@ public class EmployeeController {
         EmployeeResponseDto response = employeeService.create(employeeRequestDto);
         return ResponseEntity.created(URI.create("/api/v1/employees/"+response.getId())).body(response);
     }
-
-//    @GetMapping("?status=bench&is_enrolled=true")
-//    public ResponseEntity<List<EmployeeResponseDto>> getBenchedAndEnrolled(){
-//        List<EmployeeResponseDto> response = employeeService.getBenchedAndEnrolled();
-//        return null;
-//    }
 }
